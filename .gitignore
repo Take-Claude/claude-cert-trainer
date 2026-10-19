@@ -1,0 +1,5 @@
+.DS_Store
+ClaudeCertTrainerApp/build/
+ClaudeCertTrainerApp/DerivedData/
+*.xcuserstate
+xcuserdata/
