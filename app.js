@@ -346,10 +346,13 @@ function renderTextbook() {
   const idx = Math.min(Math.max(chapter || 0, 0), chapters.length - 1);
   const ch = chapters[idx];
   const d = meta.domains.find(x => x.id === ch.domain);
+  const tbLang = loadLang();
+  const dName = d ? ((tbLang === 'ja' && d.nameJa) || d.name) : ch.domain;
 
   const tocHtml = chapters.map((c, i) => {
     const cd = meta.domains.find(x => x.id === c.domain);
-    return `<button class="${i === idx ? 'primary' : 'ghost'}" style="font-size:0.78rem;padding:6px 10px" onclick="go('textbook', {examId:'${examId}', chapter:${i}})">第${i + 1}章 ${cd ? cd.name : c.domain}</button>`;
+    const cdName = cd ? ((tbLang === 'ja' && cd.nameJa) || cd.name) : c.domain;
+    return `<button class="${i === idx ? 'primary' : 'ghost'}" style="font-size:0.78rem;padding:6px 10px" onclick="go('textbook', {examId:'${examId}', chapter:${i}})">第${i + 1}章 ${cdName}</button>`;
   }).join('');
 
   const sectionsHtml = ch.sections.map(s => `
@@ -383,8 +386,8 @@ function renderTextbook() {
       <div class="btn-row" style="margin-bottom:0">${tocHtml}</div>
     </div>
     <div class="card">
-      <div class="domain-tag">${d ? d.name : ch.domain}${d ? ` · ${d.weight}%` : ''}</div>
-      <h2 style="margin-top:6px">第${idx + 1}章: ${d ? d.name : ch.domain}</h2>
+      <div class="domain-tag">${dName}${d ? ` · ${d.weight}%` : ''}</div>
+      <h2 style="margin-top:6px">第${idx + 1}章: ${dName}</h2>
       ${ch.diagram ? `<div class="diagram-wrap">${ch.diagram}</div>` : ''}
       ${sectionsHtml}
     </div>
@@ -433,10 +436,12 @@ function renderQuickRef() {
   const { examId } = state;
   const meta = EXAM_META[examId];
   const groups = QUICKREF[examId] || [];
+  const qrLang = loadLang();
   const html = groups.map(g => {
     const d = meta.domains.find(x => x.id === g.domain);
+    const dName = d ? ((qrLang === 'ja' && d.nameJa) || d.name) : g.domain;
     return `<div class="card">
-      <div class="domain-tag">${d ? d.name : g.domain}${d ? ` · ${d.weight}%` : ''}</div>
+      <div class="domain-tag">${dName}${d ? ` · ${d.weight}%` : ''}</div>
       ${g.items.map(it => `
         <div class="lesson-item">
           <div class="lesson-item-title">こう出たら → ${it.trigger}</div>
@@ -511,7 +516,7 @@ function renderHome() {
         ${langSwitcherHtml()}
       </div>
       <div class="sub">CCDV-F / CCAR-F / CCAR-P — 公式Exam Guideのブループリントに基づく非公式の練習問題集です。</div>
-      <div class="sub" style="margin-top:4px">右上のEN/JAで問題・選択肢・解説の表示言語を切り替えられます(CCDV-Fのみ対応)。実際の試験も2026年10月15日から日本語受験を選べるようになりました。</div>
+      <div class="sub" style="margin-top:4px">右上のEN/JAで問題・選択肢・解説の表示言語を切り替えられます(CCDV-Fの全問と、CCAR-Pの模試63問が日本語対応)。実際の試験も2026年10月15日から日本語受験を選べます。</div>
     </div>
     <div class="card" style="border-color:var(--accent)">
       <div class="badge-row"><span class="badge" style="background:var(--accent);color:#fff">★ 重点対策</span></div>
@@ -585,7 +590,7 @@ function renderHome() {
       <div class="btn-row" style="margin-top:6px">
         ${QUICKREF[id] ? `<button class="ghost" onclick="go('quickref', {examId:'${id}'})">🗂 クイックリファレンス</button>` : ''}
         ${GLOSSARY[id] ? `<button class="ghost" onclick="go('glossary', {examId:'${id}'})">📚 用語集</button>` : ''}
-        ${VOCAB[id] ? `<button class="ghost" onclick="go('vocab', {examId:'${id}'})">🔤 頻出英単語(試験は英語のみ)</button>` : ''}
+        ${VOCAB[id] ? `<button class="ghost" onclick="go('vocab', {examId:'${id}'})">🔤 頻出英単語(英語で受験する場合)</button>` : ''}
       </div>
       <div class="stats-line">${attempts ? `これまで${attempts}回受験・自己ベスト ${best}%` : 'まだ受験履歴はありません'}</div>
     </div>`;
