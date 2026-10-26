@@ -3113,6 +3113,403 @@ const TEXTBOOK = {
       ],
       trapNames: ['More-Tools Trap', 'MCP-Everything Trap'] },
   ],
+
+  /* =========================== CCAR-P ===========================
+     Architect Professional. Each chapter folds in the Foundations-level
+     grounding first (since CCAR-P has no Foundations prerequisite), then
+     goes up to the architect-level judgement the blueprint actually tests. */
+  'ccar-p': [
+    { domain: 'solution-design',
+      diagram: `<svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arr-sd" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--muted)"/></marker></defs>
+        <text x="340" y="16" text-anchor="middle" font-size="11.5" fill="var(--muted)">手順は決まっているか? モデル自身に次の一手を判断させる必要があるか?</text>
+        <rect x="14" y="28" width="206" height="80" rx="10" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="117" y="50" text-anchor="middle" font-size="12" fill="var(--accent-dark)" font-weight="700">Augmented LLM</text>
+        <text x="117" y="70" text-anchor="middle" font-size="10.5" fill="var(--muted)">1回の呼び出し + 検索/ツール</text>
+        <text x="117" y="87" text-anchor="middle" font-size="10.5" fill="var(--muted)">最も軽い。まずここを検討</text>
+        <rect x="236" y="28" width="206" height="80" rx="10" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="339" y="50" text-anchor="middle" font-size="12" fill="var(--accent-dark)" font-weight="700">Workflow</text>
+        <text x="339" y="70" text-anchor="middle" font-size="10.5" fill="var(--muted)">手順が固定。順番も既知</text>
+        <text x="339" y="87" text-anchor="middle" font-size="10.5" fill="var(--muted)">予測可能・デバッグしやすい</text>
+        <rect x="458" y="28" width="208" height="80" rx="10" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="562" y="50" text-anchor="middle" font-size="12" fill="var(--accent-dark)" font-weight="700">Agentic</text>
+        <text x="562" y="70" text-anchor="middle" font-size="10.5" fill="var(--muted)">次の一手が状況依存</text>
+        <text x="562" y="87" text-anchor="middle" font-size="10.5" fill="var(--muted)">柔軟。ただしコストと不確実性</text>
+        <text x="340" y="132" text-anchor="middle" font-size="11.5" fill="var(--accent-dark)" font-weight="700">どのパターンでも end-to-end の骨格は同じ</text>
+        <rect x="24" y="148" width="138" height="52" rx="9" fill="var(--pill-bg)" stroke="var(--border)"/>
+        <text x="93" y="172" text-anchor="middle" font-size="11.5" fill="var(--text)">Input</text>
+        <text x="93" y="188" text-anchor="middle" font-size="9.5" fill="var(--muted)">取り込み・検証</text>
+        <path d="M162,174 L196,174" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-sd)"/>
+        <rect x="200" y="148" width="138" height="52" rx="9" fill="var(--pill-bg)" stroke="var(--border)"/>
+        <text x="269" y="172" text-anchor="middle" font-size="11.5" fill="var(--text)">Processing</text>
+        <text x="269" y="188" text-anchor="middle" font-size="9.5" fill="var(--muted)">検索・推論・ツール</text>
+        <path d="M338,174 L372,174" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-sd)"/>
+        <rect x="376" y="148" width="138" height="52" rx="9" fill="var(--pill-bg)" stroke="var(--border)"/>
+        <text x="445" y="172" text-anchor="middle" font-size="11.5" fill="var(--text)">Output</text>
+        <text x="445" y="188" text-anchor="middle" font-size="9.5" fill="var(--muted)">検証・構造化</text>
+        <path d="M514,174 L548,174" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-sd)"/>
+        <rect x="552" y="148" width="114" height="52" rx="9" fill="var(--card-bg)" stroke="var(--good)"/>
+        <text x="609" y="172" text-anchor="middle" font-size="11.5" fill="var(--good)">Feedback</text>
+        <text x="609" y="188" text-anchor="middle" font-size="9.5" fill="var(--muted)">評価・改善</text>
+        <path d="M609,200 L609,224 L93,224 L93,202" stroke="var(--good)" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-sd)"/>
+        <text x="351" y="240" text-anchor="middle" font-size="10" fill="var(--good)">このループを最初から設計に入れる。後付けにしない</text>
+        <rect x="14" y="256" width="652" height="62" rx="10" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="30" y="277" font-size="11" fill="var(--accent-dark)" font-weight="700">ビジネス価値の5本柱に紐付ける</text>
+        <text x="30" y="297" font-size="10.5" fill="var(--muted)">効率化 / 変革 / 生産性 / コスト / 性能SLA — 「なぜこの設計か」を必ずこのどれかで説明できる状態にする</text>
+        <text x="30" y="312" font-size="10" fill="var(--muted)">技術的に正しいだけの設計は、CCAR-Pでは正解にならないことが多い</text>
+      </svg>`,
+      sections: [
+        { heading: 'まず「エージェントが要るか」を疑う',
+          body: 'アーキテクトの最初の仕事は、作るものを決めることではなく、<b>一番軽い構成で足りないか</b>を確かめることだ。選択肢は大きく3つある。<b>Augmented LLM</b>は、1回のモデル呼び出しに検索やツールを足しただけの構成で、最も軽く、最も壊れにくい。<b>Workflow</b>は、やる手順と順番があらかじめ決まっているときに使う、決められたステップを順に実行する構成。そして<b>Agentic</b>は、次に何をすべきかが状況によって変わり、モデル自身にそのつど判断させる必要があるときに選ぶ。<br><br>判断基準はシンプルで、<b>手順が事前に決まっているならエージェントは要らない</b>。エージェントは柔軟な代わりに、コスト・レイテンシ・不確実性のすべてが増える。試験では「エージェントでもできる」選択肢と「ワークフローで十分」な選択肢が並ぶことが多く、要件に固定的な手順しか書かれていないなら、後者が正解になる。逆に、入力のばらつきが大きく分岐が事前に列挙できない場合に無理やりワークフローに押し込める選択肢も誤りで、そこはエージェントの出番になる。' },
+        { heading: 'end-to-endで設計する — 入口・処理・出口・フィードバック',
+          body: 'どのパターンを選んでも、設計すべき骨格は<b>input → processing → output → feedback loop</b>の4つだ。<br><br><b>Input</b>では、どこからデータが来るか、形式は何か、信頼できない入力をどう検証するかを決める。<b>Processing</b>は検索・推論・ツール呼び出しの中身。<b>Output</b>では、モデルの生の出力をそのまま下流に流さず、スキーマ検証や防御的なパースを挟む。そして見落とされやすいのが<b>feedback loop</b>で、出力の品質をどう測り、どう次の改善に戻すかという経路のことだ。<br><br>CCAR-Pで問われるのは、この4つ目を<b>最初から設計に含めているか</b>という点。評価や監視を「後で足す」前提の設計は、本番で品質が落ち始めたときにそれを検知する手段がない。フィードバック経路のない構成は、選択肢として一見きれいに見えても減点対象になる。' },
+        { heading: 'マルチエージェントとオーケストレーション',
+          body: '1つのエージェントに全部やらせると、ツールが増えすぎて選択精度が落ち、コンテキストも肥大化する。そこで使うのが<b>supervisor / orchestrator-worker パターン</b>だ。親となるオーケストレーターが依頼を小さなサブタスクに分解し、それぞれを専門のサブエージェントに割り当て、戻ってきた結果を統合する。これが本番構成の標準形になっている。<br><br>サブエージェントの価値は<b>context isolation(コンテキスト分離)</b>にある。各サブエージェントは自分のタスクに必要な情報だけを持った独立したコンテキストで動くので、メインの会話が探索の過程で埋まらない。ただし分離されているということは、<b>必要な情報は明示的に渡さないと伝わらない</b>ということでもある。サブエージェントに渡すべきは、目的・期待する出力形式・使ってよいツールや情報源・タスクの境界の4点だ。<br><br>実装上の制約も押さえておきたい。Claude Codeのサブエージェントは<b>1階層まで</b>で、サブエージェントがさらにサブエージェントを呼ぶネストはできない。深い階層が要るように見える要件は、オーケストレーター側で段階的に分解し直すのが正しい対処になる。また、複数の作業を本当に並列で走らせたいなら、1回の応答の中で複数の呼び出しをまとめて発行する必要がある。ターンを分けて1つずつ出したものは逐次実行になる。' },
+        { heading: '分解技法 — 複雑な問題をどう割るか',
+          body: '複雑な要件をそのままモデルに投げると、どこで失敗したのか分からない塊になる。<b>decomposition(分解)</b>は、問題を独立に検証できる単位に割っていく作業だ。<br><br>割り方の軸はいくつかある。<b>工程で割る</b>(抽出→判定→生成)、<b>ドメインで割る</b>(法務・会計・技術)、<b>信頼度で割る</b>(自動処理してよい部分と人間の確認が要る部分)。どの軸で割っても共通して満たすべきなのは、<b>各単位が単独でテストでき、失敗したときにどこが悪いか特定できる</b>こと。この性質がないと、あとの章で出てくる評価も障害診断も成立しない。<br><br>分解の粒度は細かすぎてもいけない。呼び出し回数が増えればレイテンシとコストが積み上がるので、「独立に検証したい単位」より細かく割る理由がないなら割らない。' },
+        { heading: '技術的な正しさだけでは足りない — ビジネス価値に紐付ける',
+          body: 'CCAR-Pが Foundations と最も違うのは、<b>設計の良し悪しをビジネスの言葉で説明できるか</b>を問う点だ。ブループリントは価値の柱として、<b>効率化(efficiency)・変革(transformation)・生産性(productivity)・コスト(cost)・性能SLA(performance SLAs)</b>を挙げている。<br><br>実務上の意味はこうだ。ある設計案を選ぶとき、「こちらのほうが技術的に筋が良い」では理由にならない。「問い合わせ1件あたりの処理時間を短縮する(効率化)」「p95レイテンシ2秒というSLAを満たす(性能SLA)」のように、どの柱にどう効くかを言えて初めて設計判断になる。<br><br>試験の選択肢でも、最新の技術を使っているが要件に書かれた制約を満たさないものと、地味だが制約を確実に満たすものが並ぶ。選ぶべきは後者だ。<b>要件に明記された制約(予算・レイテンシ・規制)は、設計の好みより常に優先される</b>。' },
+      ],
+      trapNames: [] },
+
+    { domain: 'models-prompting',
+      diagram: `<svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg">
+        <text x="14" y="16" font-size="11.5" fill="var(--accent-dark)" font-weight="700">モデルティアは3軸のトレードオフ</text>
+        <text x="232" y="16" font-size="10" fill="var(--accent)">■能力</text>
+        <text x="300" y="16" font-size="10" fill="var(--muted)">■レイテンシ(長い=遅い)</text>
+        <text x="452" y="16" font-size="10" fill="var(--bad)">■コスト(長い=高い)</text>
+        <text x="14" y="40" font-size="12" fill="var(--text)" font-weight="700">Opus級</text>
+        <rect x="100" y="29" width="200" height="11" rx="5" fill="var(--accent)"/>
+        <rect x="100" y="44" width="212" height="11" rx="5" fill="var(--muted)"/>
+        <rect x="100" y="59" width="190" height="11" rx="5" fill="var(--bad)" opacity="0.75"/>
+        <text x="330" y="52" font-size="10" fill="var(--muted)">難易度が高く失敗が許されない推論</text>
+        <text x="14" y="92" font-size="12" fill="var(--text)" font-weight="700">Sonnet級</text>
+        <rect x="100" y="81" width="142" height="11" rx="5" fill="var(--accent)"/>
+        <rect x="100" y="96" width="130" height="11" rx="5" fill="var(--muted)"/>
+        <rect x="100" y="111" width="108" height="11" rx="5" fill="var(--bad)" opacity="0.75"/>
+        <text x="330" y="104" font-size="10" fill="var(--muted)">バランス型。多くの本番ワークロード</text>
+        <text x="14" y="144" font-size="12" fill="var(--text)" font-weight="700">Haiku級</text>
+        <rect x="100" y="133" width="86" height="11" rx="5" fill="var(--accent)"/>
+        <rect x="100" y="148" width="62" height="11" rx="5" fill="var(--muted)"/>
+        <rect x="100" y="163" width="44" height="11" rx="5" fill="var(--bad)" opacity="0.75"/>
+        <text x="330" y="156" font-size="10" fill="var(--muted)">大量・単純な分類や抽出</text>
+        <line x1="14" y1="188" x2="666" y2="188" stroke="var(--border)"/>
+        <text x="14" y="208" font-size="11.5" fill="var(--accent-dark)" font-weight="700">プロンプトキャッシュは「前から何文字一致したか」で効く</text>
+        <rect x="14" y="220" width="652" height="40" rx="8" fill="var(--card-bg)" stroke="var(--border)"/>
+        <rect x="14" y="220" width="300" height="40" rx="8" fill="var(--accent)" opacity="0.30"/>
+        <rect x="314" y="220" width="200" height="40" fill="var(--accent)" opacity="0.55"/>
+        <rect x="514" y="220" width="152" height="40" fill="var(--bad)" opacity="0.5"/>
+        <text x="164" y="236" text-anchor="middle" font-size="10.5" fill="var(--text)">system prompt(安定)</text>
+        <text x="164" y="251" text-anchor="middle" font-size="9.5" fill="var(--muted)">キャッシュ対象</text>
+        <text x="414" y="236" text-anchor="middle" font-size="10.5" fill="var(--text)">参照資料(安定)</text>
+        <text x="414" y="251" text-anchor="middle" font-size="9.5" fill="var(--muted)">キャッシュ対象</text>
+        <text x="590" y="236" text-anchor="middle" font-size="10.5" fill="#fff">可変の入力</text>
+        <text x="590" y="251" text-anchor="middle" font-size="9.5" fill="#fff">毎回変わる</text>
+        <text x="14" y="282" font-size="10.5" fill="var(--good)">正: 安定した内容を前に、変わる内容を後ろに置く</text>
+        <text x="14" y="300" font-size="10.5" fill="var(--bad)">誤: 先頭にタイムスタンプやセッションIDを置く → それ以降のキャッシュが全部無効になる</text>
+        <text x="14" y="316" font-size="9.5" fill="var(--muted)">効果はコストだけでなく TTFT(最初のトークンまでの時間)にも及ぶ</text>
+      </svg>`,
+      sections: [
+        { heading: 'モデルティアの選定は3軸のトレードオフ',
+          body: '押さえるべき基本は、<b>tokens(トークン)</b>がモデルの処理単位であり課金とコンテキスト上限の基準になること、<b>context window(コンテキストウィンドウ)</b>が入力と出力を合わせた長さの上限であること、そして<b>non-determinism(非決定性)</b>により同じ入力でも呼び出しごとに出力が揺れうること。temperatureを0にしても完全な再現性は保証されない。<br><br>そのうえでティア選定は、<b>能力・レイテンシ・コスト</b>の3軸をタスクごとに天秤にかける作業になる。難易度が高く間違いが許されない推論には最高性能ティア(Opus級)、大量で単純な分類や抽出には高速で安価なティア(Haiku級)、その中間の多くの本番ワークロードにはバランス型(Sonnet級)が合う。<br><br>アーキテクトとして重要なのは、<b>システム全体で1つのティアに統一する必要はない</b>という点だ。同じシステムの中でも、前段のルーティングや分類はHaiku級、最終的な判断だけOpus級、という使い分けが成立する。また、新しいモデルが出ると挙動が変わりうる(<b>breaking behavior changes</b>)ため、特定モデルの細かい癖に依存したロジックを深く埋め込むのは避け、必要なら<b>モデルバージョンの固定(pinning)</b>で挙動を安定させる。' },
+        { heading: 'system promptとテンプレートの設計',
+          body: '長い指示を1つの段落に詰め込むと、モデルは途中に埋もれた条件を拾い落とす。<b>セクションを明示的に区切る</b>のが基本で、XMLタグ(&lt;instructions&gt;、&lt;document&gt;など)や見出しを使って、役割・ツールの使い方・エスカレーション基準・出力形式をそれぞれ独立したブロックに分ける。<br><br>アーキテクトの視点では、プロンプトを<b>1枚岩で持たない</b>ことも重要になる。共通の役割定義・共通の制約・タスク固有の指示を別々のモジュールとして持ち、組み合わせて使う構成にしておくと、複数のユースケースをまたいで一貫性を保ちやすく、変更の影響範囲も限定できる。<br><br>そして<b>プロンプトはコードと同じ</b>だ。挙動を決める以上、バージョン管理し、レビューし、変更履歴を追えるようにしておく。<b>prompt versioning</b>が効くのは、品質が落ちたときに「どの版なら動いていたか」に即座に戻せるからで、原因を推測しながら手探りで直すのとは復旧速度が違う。' },
+        { heading: 'プロンプト技法 — zero-shot / few-shot / chain-of-thought',
+          body: '<b>zero-shot</b>は例を見せずに指示だけで行わせる方法。タスクが単純で曖昧さが小さいなら、これで十分だしコストも軽い。<br><br><b>few-shot / multi-shot</b>は、入力と正しい出力のペアをいくつか示す方法だ。効くのは、<b>言葉でルールを書き切れない微妙な判断</b>があるとき。境界線上のケースの分類が安定しないとき、ルール文を増やすより実例を数件見せるほうが効く場面が多い。<br><br><b>chain-of-thought(CoT)</b>は、最終回答の前に段階的に推論させる方法。多段階の計算や、複数の条件を突き合わせる判断で効く。注意点として、「注意深く考えてください」と書くだけでは十分でないことが多く、<b>スクラッチパッドや思考セクションを明示的に設ける</b>など、構造として推論の場所を作るほうが確実だ。なお、思考させれば出力トークンは増えるので、レイテンシとコストへの影響は設計時に織り込む。' },
+        { heading: 'コンテキストウィンドウを予算として扱う',
+          body: 'コンテキストは<b>有限の予算</b>であり、入力と出力の両方がそこを食う。長い会話や大きな参照資料を無計画に積むと、上限に当たるだけでなく、重要な情報が薄まって精度も落ちる。<br><br>対処の引き出しは3つある。1つ目は<b>削る</b> — 冗長なツール出力は積み上がる前に要約・圧縮する(<b>compaction</b>)。2つ目は<b>分ける</b> — 探索的で長くなる作業はサブエージェントに逃がし、メインの文脈を汚さない(<b>context isolation</b>)。3つ目は<b>必要な分だけ入れる</b> — 大きな文書を毎回丸ごと貼るのではなく、その質問に関係する部分だけを検索で引く。<br><br>長時間セッションで古い決定事項を見失い、同時にレイテンシとコストが上がってきたという症状は、典型的なコンテキスト肥大のサインだ。これはモデルの劣化ではなく、そのセッションの履歴管理の問題として扱う。' },
+        { heading: '再利用戦略 — キャッシュ・モジュラープロンプト・Skills',
+          body: '同じ長いシステムプロンプトや参照資料を毎回送っているなら、<b>prompt caching</b>が直接効く。ただし仕組みを正確に理解しておく必要がある。キャッシュは<b>先頭からの一致(プレフィックス一致)</b>で効くので、変わりやすい内容を前に置くと、それ以降の安定した部分まで巻き添えでキャッシュが無効になる。<b>安定した内容を前に、可変の内容を後ろに</b>が鉄則だ。効果はコスト削減だけでなく、最初のトークンが返るまでの時間(TTFT)にも及ぶため、レイテンシ要件とコスト要件を<b>同時に</b>満たしたい場面での第一候補になる。<br><br><b>Skills</b>は、毎回読ませる必要はないが繰り返し使う多段階の手順を、必要なときだけ呼び出せる形にまとめたものだ。常時読み込まれる<b>CLAUDE.md</b>との使い分けが要点で、「毎セッション必ず知っておいてほしい背景」はCLAUDE.md、「特定の作業のときだけ参照する手順」はSkillに置く。何でもCLAUDE.mdに詰め込むと、常時読み込みのコストが膨らみ、本来の目的を損なう。<br><br>コスト最適化を求められたときの順序も覚えておきたい。<b>不要なコンテキストを削る → 安定部分をキャッシュする → 単純で大量な処理を安いティアへ → 急がない処理をBatch APIへ → 最後の手段としてモデルティアを下げる</b>。いきなりティアを落とす選択肢は、評価の裏付けがない限り正解になりにくい。' },
+      ],
+      trapNames: [] },
+
+    { domain: 'integration',
+      diagram: `<svg viewBox="0 0 680 350" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arr-int" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/></marker></defs>
+        <text x="14" y="16" font-size="11.5" fill="var(--accent-dark)" font-weight="700">RAGパイプライン — 失敗の多くは生成ではなく検索側で起きる</text>
+        <rect x="14" y="26" width="104" height="54" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="66" y="48" text-anchor="middle" font-size="10.5" fill="var(--text)">文書</text>
+        <text x="66" y="64" text-anchor="middle" font-size="9.5" fill="var(--muted)">元データ</text>
+        <path d="M118,53 L142,53" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-int)"/>
+        <rect x="146" y="26" width="118" height="54" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="205" y="44" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Chunking</text>
+        <text x="205" y="59" text-anchor="middle" font-size="9" fill="var(--muted)">粒度の設計</text>
+        <text x="205" y="72" text-anchor="middle" font-size="9" fill="var(--muted)">+文脈の付与</text>
+        <path d="M264,53 L288,53" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-int)"/>
+        <rect x="292" y="26" width="118" height="54" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="351" y="44" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Index</text>
+        <text x="351" y="59" text-anchor="middle" font-size="9" fill="var(--muted)">ベクトル</text>
+        <text x="351" y="72" text-anchor="middle" font-size="9" fill="var(--muted)">+ キーワード</text>
+        <path d="M410,53 L434,53" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-int)"/>
+        <rect x="438" y="26" width="104" height="54" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="490" y="48" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Retrieve</text>
+        <text x="490" y="64" text-anchor="middle" font-size="9" fill="var(--muted)">+ Rerank</text>
+        <path d="M542,53 L566,53" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-int)"/>
+        <rect x="570" y="26" width="96" height="54" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="618" y="48" text-anchor="middle" font-size="10.5" fill="var(--text)">生成</text>
+        <text x="618" y="64" text-anchor="middle" font-size="9.5" fill="var(--muted)">Claude</text>
+        <rect x="146" y="88" width="396" height="24" rx="6" fill="var(--bad)" opacity="0.12"/>
+        <text x="344" y="104" text-anchor="middle" font-size="10" fill="var(--bad)">自信満々の誤答が出たら、まずこの範囲を疑う(再index漏れ・embedding不一致・古いchunk)</text>
+        <line x1="14" y1="126" x2="666" y2="126" stroke="var(--border)"/>
+        <text x="14" y="146" font-size="11.5" fill="var(--accent-dark)" font-weight="700">接続プロトコルの選び分け</text>
+        <rect x="14" y="156" width="212" height="74" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="120" y="176" text-anchor="middle" font-size="11" fill="var(--accent-dark)" font-weight="700">API / CLI 直結</text>
+        <text x="120" y="194" text-anchor="middle" font-size="9.5" fill="var(--muted)">1つのアプリ専用</text>
+        <text x="120" y="209" text-anchor="middle" font-size="9.5" fill="var(--muted)">再利用の予定なし</text>
+        <text x="120" y="224" text-anchor="middle" font-size="9.5" fill="var(--muted)">最小の構成</text>
+        <rect x="234" y="156" width="212" height="74" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="340" y="176" text-anchor="middle" font-size="11" fill="var(--accent-dark)" font-weight="700">MCP</text>
+        <text x="340" y="194" text-anchor="middle" font-size="9.5" fill="var(--muted)">複数アプリで共有</text>
+        <text x="340" y="209" text-anchor="middle" font-size="9.5" fill="var(--muted)">独立して保守したい</text>
+        <text x="340" y="224" text-anchor="middle" font-size="9.5" fill="var(--muted)">ツールへの標準接続</text>
+        <rect x="454" y="156" width="212" height="74" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="560" y="176" text-anchor="middle" font-size="11" fill="var(--accent-dark)" font-weight="700">Agent-to-Agent</text>
+        <text x="560" y="194" text-anchor="middle" font-size="9.5" fill="var(--muted)">相手も自律エージェント</text>
+        <text x="560" y="209" text-anchor="middle" font-size="9.5" fill="var(--muted)">別チーム/別基盤</text>
+        <text x="560" y="224" text-anchor="middle" font-size="9.5" fill="var(--muted)">対等な連携</text>
+        <text x="340" y="248" text-anchor="middle" font-size="10" fill="var(--good)">原則: ツールにつなぐなら MCP、相手が対等なエージェントなら A2A</text>
+        <line x1="14" y1="262" x2="666" y2="262" stroke="var(--border)"/>
+        <text x="14" y="282" font-size="11.5" fill="var(--accent-dark)" font-weight="700">Capability bloat — ツールは「持たせない」が基本</text>
+        <rect x="14" y="292" width="320" height="48" rx="9" fill="var(--card-bg)" stroke="var(--bad)"/>
+        <text x="174" y="311" text-anchor="middle" font-size="10" fill="var(--bad)">読取 / 下書き / 返金 / アカウント削除</text>
+        <text x="174" y="329" text-anchor="middle" font-size="9.5" fill="var(--muted)">業務に不要な権限まで渡している状態</text>
+        <path d="M338,316 L360,316" stroke="var(--good)" stroke-width="2" marker-end="url(#arr-int)"/>
+        <rect x="366" y="292" width="300" height="48" rx="9" fill="var(--card-bg)" stroke="var(--good)"/>
+        <text x="516" y="311" text-anchor="middle" font-size="10" fill="var(--good)">読取 / 下書き のみ</text>
+        <text x="516" y="329" text-anchor="middle" font-size="9.5" fill="var(--muted)">監査ログや確認画面の追加では代替できない</text>
+      </svg>`,
+      sections: [
+        { heading: '接続プロトコルを選び分ける — MCP / API・CLI / agent-to-agent',
+          body: 'この章は配点19%で最大のドメインだ。まず接続の選択から。<br><br><b>MCP(Model Context Protocol)</b>は、AIアプリケーションを外部のデータ・ツール・ワークフローにつなぐためのオープンな標準プロトコル。サーバー側が<b>Tools</b>(実行できる操作)・<b>Resources</b>(参照データ)・<b>Prompts</b>(再利用できるひな形)を公開し、クライアントがそれに接続する構成になる。MCPの価値は<b>標準化と再利用</b>にあるので、同じ機能を複数のアプリケーションから使いたい、あるいはアプリ本体とは独立して保守したい場合に選ぶ。<br><br>逆に、1つのアプリでしか使わず再利用の予定もない機能を、わざわざMCPサーバーとして立てるのは過剰だ。その場合はアプリケーション内の<b>カスタムツール定義やAPI/CLI直結</b>で足りる。サーバーを1つ増やせば、その運用・監視・認証の面倒も増える。<br><br><b>agent-to-agent</b>は、つなぐ相手が自律的なエージェントである場合の連携形態だ。覚えやすい原則として、<b>ツールにつなぐならMCP、相手が対等なエージェントならagent-to-agent</b>と整理しておくとよい。' },
+        { heading: 'Capability bloat — 権限は「足す」より「持たせない」',
+          body: 'エージェントに便利そうなツールを次々足していくと、2つの問題が同時に起きる。1つは<b>ツール選択の精度低下</b>で、選択肢が増えるほどモデルは間違ったツールを選びやすくなる。実務上の目安として、1つのサーバーが公開するツールは絞り込むべきで、多ければ多いほど良いということはない。<br><br>もう1つ、より重大なのが<b>攻撃面の拡大</b>だ。業務上必要のない操作がエージェントの手元にある状態は、それ自体がリスクになる。サポート担当がチケットの閲覧と返信の下書きしかしないのに、返金やアカウント削除のツールまで接続されている構成がその典型。<br><br>ここで<b>least privilege(最小権限)</b>の正しい適用を押さえておきたい。正解は<b>不要なツールを構成から外すこと</b>であって、「監査ログを追加する」「実行前に確認を挟む」ではない。後者は<b>検知的・補償的コントロール</b>であり、権限そのものを取り除いてはいない。権限が残っている限り、バグやプロンプトインジェクションで発火する余地が残る。同様に「より賢いモデルに替える」も、認可の範囲とは無関係な対処だ。<br><br>ツール選択の精度が出ないときも、まず疑うのはツールの数と<b>説明文の質</b>であって、ツールを足すことではない。説明があいまいだったり複数のツールで内容が重なっていると、モデルは選び間違える。' },
+        { heading: 'RAGパイプライン — chunkingとindexingが品質を決める',
+          body: 'RAGの品質は、生成よりも<b>検索側の設計</b>でほぼ決まる。<br><br><b>Chunking(分割)</b>は検索される単位の粒度を決める作業だ。大きすぎる塊は無関係な内容を巻き込み、小さすぎると文脈が切れて意味が通らなくなる。特に問題になるのが、分割によって<b>その断片が何の話なのかが失われる</b>ケース。章題・主語・日付といった情報が元の位置に残ってしまい、断片だけ読んでも判断できなくなる。<br><br>これに対する有効な手法が<b>contextual retrieval</b>で、各chunkに対して文書全体を参照した短い文脈説明を付けてからインデックスする。切り離されてしまった主題・所属セクション・固有名詞を補うことで、検索の取りこぼしを大きく減らせる。<br><br><b>Indexing</b>では、意味の近さで引く<b>ベクトル検索</b>と、語の一致で引く<b>キーワード検索(BM25など)</b>を組み合わせる<b>ハイブリッド構成</b>が実務の標準だ。製品コードや型番のように<b>表記が一致してこそ意味がある</b>語はベクトル検索が苦手なので、キーワード側が補う。さらに取得した候補を<b>rerank(再ランク付け)</b>で並べ替えると、上位に入る文書の質が上がる。' },
+        { heading: '検索戦略はデータの形とクエリの型に合わせる',
+          body: '一律の構成を当てはめるのではなく、<b>データの形状</b>と<b>問い合わせのパターン</b>に合わせて選ぶ。<br><br>長い散文(規程・論文・議事録)なら、意味的なまとまりで分割してベクトル検索が効く。構造化された表やレコードなら、そもそもベクトル検索より<b>クエリで直接引く</b>ほうが正確で速い。識別子や型番の完全一致が要るなら、キーワード検索が主役になる。関係性をたどる必要がある問い合わせ(この部品を使っている製品は何か)なら、グラフ的な構造や結合で引くほうが素直だ。<br><br>クエリの型も見る。「この文書の要点は」という要約型と、「第4条の例外規定は」という特定箇所の参照型では、必要なchunkの粒度も取得件数も違う。<br><br>この章の最後の目標、<b>progressive discovery vs monolithic context</b>もここに関係する。すべての情報を最初から1つの巨大なコンテキストに積む(monolithic)のか、必要になった分だけ段階的に取りに行く(progressive)のか。文脈の総量が大きく、かつ1回の問い合わせで使う割合が小さいほど、progressiveが有利になる。逆に、文脈が小さくまとまっていて毎回ほぼ全部使うなら、検索を挟む複雑さのほうが損になる。' },
+        { heading: '認証・認可のギャップを設計で塞ぐ',
+          body: '認証(誰であるか)と認可(何をしてよいか)は別物で、LLMを挟むシステムでは<b>認可の抜け</b>が起きやすい。<br><br>よくある穴は、<b>強制する層を間違える</b>ことだ。呼び出し元の役割によって見せてよい範囲が違うなら、その制御は<b>実際にデータを取り出すサーバー側</b>で行う。システムプロンプトでモデルに「この情報は見せないで」と指示するのは、言い回しを変えたリクエストやバグで突破されうる、お願いベースの制御にすぎない。クライアントのUIでボタンを隠すのも同様で、プロトコル層の呼び出し自体は止められない。<br><br>もう1つが<b>共有された強すぎる認証情報</b>だ。全ユーザー・全エージェントが同じ高権限アカウントを使い回すと、誰が何をしたのか追えなくなり、監査証跡も成立しない。<br><br>APIキーや認証情報は、シークレットマネージャーや環境変数で管理し、ソースコードやリポジトリに含めない。これは Foundations レベルの基本だが、アーキテクトとしては<b>開発環境と本番環境の両方で</b>一貫した管理方針になっているか、ローテーションが可能かまで設計に入れる。' },
+        { heading: '精度とレイテンシのトレードオフ、そして大規模での観測性',
+          body: '検索件数を増やす、rerankを足す、思考を長くする、多段で検証する — 精度を上げる手はどれも<b>レイテンシとコストを押し上げる</b>。アーキテクトに求められるのは、この交換条件を要件に照らして<b>正当化できる</b>ことだ。対話型で応答速度が厳しいなら精度側をどこまで譲るか、バッチ処理で時間に余裕があるなら精度を取りにいく、という判断を根拠とともに示せる状態にする。<br><br>観測性も規模が上がると質が変わる。少数のリクエストならログを目で追えるが、大規模になると全件を人が見ることはできない。必要になるのは、<b>代表サンプルの自動抽出と自動採点</b>、<b>品質のドリフト検知</b>、そして<b>閾値を割ったときのアラート</b>だ。<br><br>加えて、多段のエージェントやツール呼び出しを含む構成では、1件の処理がどの経路をたどったかを追える<b>trace(トレース)</b>が欠かせない。どのステップでつまずいたのかを特定できなければ、障害が起きても原因にたどり着けない。観測性を「ログを出すこと」と捉えず、<b>何を測り、どう異常に気づき、どこまで遡れるか</b>の設計として考える。' },
+      ],
+      trapNames: [] },
+
+    { domain: 'eval-testing',
+      diagram: `<svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arr-ev" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--muted)"/></marker></defs>
+        <text x="14" y="16" font-size="11.5" fill="var(--accent-dark)" font-weight="700">評価は一度きりの検査ではなくループ</text>
+        <rect x="40" y="28" width="118" height="46" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="99" y="48" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">指標を決める</text>
+        <text x="99" y="64" text-anchor="middle" font-size="9" fill="var(--muted)">何を良しとするか</text>
+        <path d="M158,51 L186,51" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-ev)"/>
+        <rect x="190" y="28" width="118" height="46" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="249" y="48" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">評価セット</text>
+        <text x="249" y="64" text-anchor="middle" font-size="9" fill="var(--muted)">代表例+難例</text>
+        <path d="M308,51 L336,51" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-ev)"/>
+        <rect x="340" y="28" width="118" height="46" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="399" y="48" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">実行・採点</text>
+        <text x="399" y="64" text-anchor="middle" font-size="9" fill="var(--muted)">自動+人手</text>
+        <path d="M458,51 L486,51" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-ev)"/>
+        <rect x="490" y="28" width="118" height="46" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="549" y="48" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">改善</text>
+        <text x="549" y="64" text-anchor="middle" font-size="9" fill="var(--muted)">A/Bで比較</text>
+        <path d="M608,51 L640,51 L640,92 L99,92 L99,76" stroke="var(--accent)" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-ev)"/>
+        <text x="370" y="108" text-anchor="middle" font-size="10" fill="var(--muted)">基準がないと「悪くなった」という報告を確認も反証もできない</text>
+        <line x1="14" y1="122" x2="666" y2="122" stroke="var(--border)"/>
+        <text x="14" y="142" font-size="11.5" fill="var(--accent-dark)" font-weight="700">症状から原因を切り分ける</text>
+        <rect x="14" y="152" width="318" height="40" rx="8" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="26" y="168" font-size="10" fill="var(--text)">文書更新後に自信満々の誤答。モデルもレイテンシも不変</text>
+        <text x="26" y="184" font-size="9.5" fill="var(--muted)">→ 再index漏れ / embedding不一致 / 古いchunk</text>
+        <rect x="348" y="152" width="318" height="40" rx="8" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="360" y="168" font-size="10" fill="var(--text)">出力形式が崩れてパースできない</text>
+        <text x="360" y="184" font-size="9.5" fill="var(--muted)">→ プロンプトの構造化 / スキーマ / プリフィル</text>
+        <rect x="14" y="200" width="318" height="40" rx="8" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="26" y="216" font-size="10" fill="var(--text)">境界ケースの判断が毎回ぶれる</text>
+        <text x="26" y="232" font-size="9.5" fill="var(--muted)">→ few-shotで実例を示す / 判断基準の明文化</text>
+        <rect x="348" y="200" width="318" height="40" rx="8" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="360" y="216" font-size="10" fill="var(--text)">複雑な推論だけ品質が足りない</text>
+        <text x="360" y="232" font-size="9.5" fill="var(--muted)">→ model mismatch / CoT・拡張思考の検討</text>
+        <line x1="14" y1="254" x2="666" y2="254" stroke="var(--border)"/>
+        <text x="14" y="274" font-size="11.5" fill="var(--accent-dark)" font-weight="700">コスト最適化は順序がある(左から試す)</text>
+        <rect x="14" y="284" width="118" height="44" rx="8" fill="var(--good)" opacity="0.18"/>
+        <text x="73" y="302" text-anchor="middle" font-size="9.5" fill="var(--text)">不要な文脈</text>
+        <text x="73" y="317" text-anchor="middle" font-size="9.5" fill="var(--text)">を削る</text>
+        <rect x="140" y="284" width="118" height="44" rx="8" fill="var(--good)" opacity="0.14"/>
+        <text x="199" y="302" text-anchor="middle" font-size="9.5" fill="var(--text)">安定部分を</text>
+        <text x="199" y="317" text-anchor="middle" font-size="9.5" fill="var(--text)">キャッシュ</text>
+        <rect x="266" y="284" width="118" height="44" rx="8" fill="var(--pill-bg)"/>
+        <text x="325" y="302" text-anchor="middle" font-size="9.5" fill="var(--text)">単純処理を</text>
+        <text x="325" y="317" text-anchor="middle" font-size="9.5" fill="var(--text)">安いティアへ</text>
+        <rect x="392" y="284" width="118" height="44" rx="8" fill="var(--pill-bg)"/>
+        <text x="451" y="302" text-anchor="middle" font-size="9.5" fill="var(--text)">急がない処理</text>
+        <text x="451" y="317" text-anchor="middle" font-size="9.5" fill="var(--text)">をBatchへ</text>
+        <rect x="518" y="284" width="148" height="44" rx="8" fill="var(--bad)" opacity="0.14"/>
+        <text x="592" y="302" text-anchor="middle" font-size="9.5" fill="var(--bad)">ティアを下げる</text>
+        <text x="592" y="317" text-anchor="middle" font-size="9" fill="var(--muted)">評価の裏付けがある時だけ</text>
+      </svg>`,
+      sections: [
+        { heading: '何を良しとするかを先に決める',
+          body: '評価の設計は、指標を決めるところから始まる。ブループリントが挙げるのは<b>accuracy(正確さ)・latency(レイテンシ)・cost(コスト)・safety(安全性)・security(セキュリティ)</b>の5つだ。<br><br>ここで重要なのは、<b>これらは同時に最大化できない</b>ということ。精度を上げれば遅く高くなり、速さを取れば精度を譲ることになる。だからアーキテクトは「全部良くする」ではなく、<b>このユースケースでは何が譲れなくて、何なら譲れるか</b>を先に決める。対話型アシスタントならレイテンシが効き、与信審査なら正確さと説明可能性が効く、という具合だ。<br><br>指標は測れる形まで落とす必要もある。「品質が高いこと」では評価できないので、「指定スキーマに適合する率」「人手レビューでの合格率」「p95レイテンシ」のように、数えられる形にする。' },
+        { heading: '評価セットとテストフレームワークを作る',
+          body: '<b>evaluation set(評価セット)</b>は、正解が分かっている代表的な入力の集合だ。これがあって初めて、変更の前後を客観的に比べられる。<br><br>作るときのコツは、<b>平均的なケースだけで埋めない</b>こと。実際に品質が崩れるのは境界ケースや例外的な入力なので、過去に失敗した事例、曖昧で判断が割れたケース、悪意ある入力のサンプルを意識的に混ぜる。<br><br>採点方法も<b>混合(mixed methodologies)</b>で考える。完全一致やスキーマ適合のように機械的に判定できるものは自動で。要約の質や説明の妥当性のように自動化しにくいものは、別のモデルに採点させる方式か、人手レビューを組み合わせる。どれか1つの方法ですべてを測ろうとすると、測れないものが評価から漏れる。<br><br>評価セットは<b>資産</b>なので、バージョン管理し、本番で新しい失敗を見つけるたびに追加していく。' },
+        { heading: 'A/Bテストと反復改善',
+          body: '変更が本当に改善なのかは、比べないと分からない。評価セット上で新旧を走らせて比較するのが第一段階、本番トラフィックを分けて比べるのが<b>A/Bテスト</b>だ。<br><br>注意点として、LLMの出力には<b>非決定性</b>がある。1件の良し悪しを見て判断すると、単なる揺れを改善と誤認する。十分なサンプル数で、<b>分布として</b>比べる必要がある。<br><br>もう1つ、<b>一度に複数の要素を変えない</b>。プロンプトとモデルティアと検索件数を同時に変えて良くなっても、何が効いたのか分からず、次に活かせない。<br><br>そして本番リリースは一度に全量切り替えず、段階的に広げて、劣化が見えたら戻せる経路を用意しておく。前章の<b>prompt versioning</b>はここで効いてくる。' },
+        { heading: '障害を切り分ける — 症状から原因へ',
+          body: 'デバッグの最初の一歩は<b>どの層で起きているかの切り分け</b>だ。統合・アプリケーション側のコードの問題か、モデルの出力自体の問題か。原因によって打つ手がまったく違う。<br><br>症状と典型的な原因の対応を押さえておくと速い。<br><br><b>文書更新の直後から、自信満々だが誤った回答が出る。モデルもレイテンシも変わっていない</b> — これは生成ではなく<b>検索側</b>の疑いが濃い。再インデックスの失敗、embeddingの不一致、古いchunkが残っている、といった原因が考えられる。モデルの重みが勝手に変わることはないし、文書更新で温度設定やコンテキスト上限が変わるわけでもない。<br><br><b>出力形式が崩れてパースできない</b> — プロンプトの構造化、スキーマの明示、応答のプリフィルで対処する領域。<br><br><b>境界ケースの判断がぶれる</b> — ルール文を足すより、few-shotで実例を示すほうが効くことが多い。<br><br><b>単純なタスクは通るが複雑な推論だけ品質が足りない</b> — <b>model mismatch</b>、つまりタスクに対してティアが足りていない可能性。あるいは段階的な推論の仕組みが要る。<br><br><b>hallucination(ハルシネーション)</b>については、もっともらしく整った文章であることは正しさの保証にならない、という前提を設計に組み込む。出力は検証し、根拠を参照できる形にする。' },
+        { heading: '最適化は順序を守る',
+          body: 'コストやレイテンシを下げろと言われたとき、いきなりモデルティアを落とすのは<b>最後の手段</b>だ。順序はこうなる。<br><br>まず<b>不要なコンテキストを削る</b>。毎回送っている情報のうち、実際には使われていない部分を落とす。次に<b>安定した部分をキャッシュする</b>。繰り返し送られるプレフィックスをキャッシュに載せると、コストとTTFTの両方に効く。次に<b>単純で大量な処理を安いティアに振り分ける</b>。前段の分類やルーティングは高性能ティアでなくても成立することが多い。次に<b>急がない大量処理をBatch APIに回す</b>。そして最後に、<b>評価データで品質への影響が許容範囲だと確認できた場合に限り</b>、モデルティアを下げる。<br><br>この順序が問われるのは、前の段階ほど<b>品質に手を触れずにコストを下げられる</b>からだ。品質を犠牲にする打ち手を先に出す選択肢は、根拠に基づいた段階的アプローチを飛ばしているので誤りになる。' },
+        { heading: '本番のモニタリングと観測性',
+          body: 'リリース前の評価は必要条件であって十分条件ではない。本番では入力の分布が時間とともに変わり、固定されたテストセットでは捉えにくい<b>drift(ドリフト)</b>が起きる。<br><br>必要なのは<b>継続的なモニタリング</b>だ。本番の出力から代表サンプルを自動で抜き、自動採点で品質の推移を追い、閾値を割ったらアラートを上げる。加えて、トークン使用量・レイテンシ分布・エラー率・ツール呼び出しの成否といった運用指標を並べて見られるようにしておく。<br><br>ここでも<b>trace(トレース)</b>が効く。多段の処理で品質が落ちたとき、どのステップが原因かを後から追えるかどうかで、復旧までの時間が変わる。観測性は障害が起きてから足すものではなく、<b>最初の設計に含めておくもの</b>だ。これは第1章のフィードバックループの話と地続きになる。' },
+      ],
+      trapNames: [] },
+
+    { domain: 'governance-safety',
+      diagram: `<svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg">
+        <text x="14" y="16" font-size="11.5" fill="var(--accent-dark)" font-weight="700">ガードレールは層で守る — 1枚のプロンプトに頼らない</text>
+        <rect x="14" y="26" width="652" height="150" rx="10" fill="var(--pill-bg)" stroke="var(--border)"/>
+        <text x="28" y="44" font-size="10.5" fill="var(--muted)">外側: ポリシー・規制・組織の統制</text>
+        <rect x="56" y="52" width="568" height="114" rx="9" fill="var(--card-bg)" stroke="var(--accent)"/>
+        <text x="70" y="70" font-size="10.5" fill="var(--accent-dark)">インフラ層: 最小権限・IAM・ネットワーク境界・シークレット管理</text>
+        <rect x="104" y="78" width="472" height="80" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="118" y="96" font-size="10.5" fill="var(--accent-dark)">コード層: Hooks・スキーマ検証・ツール許可リスト・承認ゲート</text>
+        <rect x="152" y="104" width="376" height="46" rx="9" fill="var(--card-bg)" stroke="var(--good)"/>
+        <text x="340" y="123" text-anchor="middle" font-size="10.5" fill="var(--good)">プロンプト層: 指示・コンテンツ境界</text>
+        <text x="340" y="140" text-anchor="middle" font-size="9.5" fill="var(--muted)">一番内側。ここ「だけ」に頼る構成が典型的な誤り</text>
+        <line x1="14" y1="190" x2="666" y2="190" stroke="var(--border)"/>
+        <text x="14" y="210" font-size="11.5" fill="var(--accent-dark)" font-weight="700">Human-in-the-loop をどこに置くか</text>
+        <rect x="14" y="220" width="212" height="58" rx="9" fill="var(--card-bg)" stroke="var(--good)"/>
+        <text x="120" y="240" text-anchor="middle" font-size="10.5" fill="var(--good)" font-weight="700">自動で流す</text>
+        <text x="120" y="256" text-anchor="middle" font-size="9.5" fill="var(--muted)">可逆・低リスク・大量</text>
+        <text x="120" y="270" text-anchor="middle" font-size="9.5" fill="var(--muted)">例: 問い合わせの分類</text>
+        <rect x="234" y="220" width="212" height="58" rx="9" fill="var(--card-bg)" stroke="var(--accent)"/>
+        <text x="340" y="240" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">事後レビュー</text>
+        <text x="340" y="256" text-anchor="middle" font-size="9.5" fill="var(--muted)">影響は中程度・訂正可能</text>
+        <text x="340" y="270" text-anchor="middle" font-size="9.5" fill="var(--muted)">例: 下書きの送信前確認</text>
+        <rect x="454" y="220" width="212" height="58" rx="9" fill="var(--card-bg)" stroke="var(--bad)"/>
+        <text x="560" y="240" text-anchor="middle" font-size="10.5" fill="var(--bad)" font-weight="700">事前承認を必須に</text>
+        <text x="560" y="256" text-anchor="middle" font-size="9.5" fill="var(--muted)">不可逆・高リスク・規制対象</text>
+        <text x="560" y="270" text-anchor="middle" font-size="9.5" fill="var(--muted)">例: 返金・削除・与信判断</text>
+        <text x="340" y="298" text-anchor="middle" font-size="10" fill="var(--muted)">判断軸は「取り返しがつくか」と「影響の大きさ」。全件レビューは現実的でないことが多い</text>
+        <text x="340" y="318" text-anchor="middle" font-size="10" fill="var(--accent-dark)">規制対応(GDPR / HIPAA / FedRAMP)は、どこにデータが保存され誰が触れるかの設計そのもの</text>
+      </svg>`,
+      sections: [
+        { heading: 'ガードレールは層で重ねる',
+          body: '安全性の設計で最もよくある誤りは、<b>プロンプトの指示だけで守ろうとする</b>ことだ。「こういう場合は断ってください」と書いても、それは言い回しを変えたリクエストやバグで突破されうる、強制力のない制御にすぎない。<br><br>正しい考え方は<b>多層防御</b>だ。内側から順に、<b>プロンプト層</b>(指示・コンテンツ境界)、<b>コード層</b>(スキーマ検証、ツールの許可リスト、破壊的操作をブロックする<b>Hooks</b>、承認ゲート)、<b>インフラ層</b>(最小権限、IAM、ネットワーク境界、シークレット管理)、そして<b>組織層</b>(ポリシー、規制、監査)。<br><br>Hooksが効くのは、<b>モデルがどう判断しようと関係なく</b>特定の操作を止められるからだ。モデルの判断に委ねたくない制約は、プロンプトではなくコード側に置く。試験では、確実な強制が要る場面でプロンプトによる指示を選ぶ選択肢が誤答として置かれやすい。<br><br>同様に重要なのが<b>untrusted input(信頼できない入力)</b>の扱いだ。Webページ、アップロードされた文書、ユーザーが貼り付けたテキストは、すべて<b>指示ではなくデータ</b>として扱う。そこに埋め込まれた<b>プロンプトインジェクション</b>がツールを発火させられない構成にしておくことが、根本的な防御になる。' },
+        { heading: 'LLMシステム固有の失敗モードを把握する',
+          body: 'リスクを洗い出すには、何が起こりうるかを知っている必要がある。<br><br><b>hallucination</b> — 事実に基づかない内容を、もっともらしい形で出力する。整った文章であることは正しさの証拠にならない。<br><br><b>プロンプトインジェクション / jailbreak</b> — 外部コンテンツや巧妙な入力によって、意図した制約を迂回される。<br><br><b>データ漏洩</b> — システムプロンプトの内容、他ユーザーのデータ、PIIなどが出力に混入する。コンテキストに入れたものは出力に出うる、という前提で設計する。<br><br><b>non-determinism</b> — 同じ入力でも出力が揺れる。完全な再現性を前提にした設計は成立しない。<br><br><b>drift</b> — 入力の分布やモデルの更新によって、時間とともに挙動が変わる。<br><br>これらは「起きないようにする」より、<b>起きたときに被害が限定される構成にする</b>ほうが現実的だ。出力を検証する、権限を絞る、影響の大きい操作には人を挟む、という設計で受け止める。' },
+        { heading: 'Human-in-the-loopをどこに置くか',
+          body: '人間の確認をどこに入れるかは、アーキテクトの判断そのものだ。全件を人がレビューする構成は安全に見えて、多くの場合<b>現実的でない</b> — そもそもAIを入れた意味がなくなるか、レビューが形骸化する。<br><br>判断軸は2つ。<b>取り返しがつくか(可逆性)</b>と<b>影響の大きさ</b>だ。<br><br>可逆で低リスクかつ大量に発生する処理(問い合わせの分類、タグ付け)は自動で流す。影響が中程度で後から訂正できるもの(返信の下書き)は、送信前の確認や事後のサンプリングレビューで足りる。<b>不可逆または高リスク、あるいは規制対象</b>の操作(返金、データ削除、与信や医療にかかわる判断)は、実行前の明示的な承認を必須にする。<br><br>承認を挟む場所も重要で、モデルが「承認を求めるべきか」を判断する設計にすると、その判断自体が外れうる。<b>どの操作に承認が要るかはコード側で決める</b>のが堅い。' },
+        { heading: '規制対応はデータの流れの設計',
+          body: '<b>GDPR・HIPAA・FedRAMP</b>といった規制への対応は、チェックリストを埋める作業ではなく<b>データがどこを通りどこに残るか</b>の設計だ。<br><br>押さえるべき観点はおおむね共通している。<b>どのデータが機微か</b>(個人情報、医療情報、機密区分)。<b>どこに保存されるか</b>(データ所在地・越境移転の可否)。<b>誰が触れるか</b>(アクセス制御と監査証跡)。<b>どれだけ保持するか</b>(保持期間と削除の実行可能性)。<b>どこまで説明できるか</b>(判断の根拠を後から示せるか)。<br><br>LLMを挟むと論点が増える。プロンプトやログに機微情報が入れば、それも保護対象になる。モデルへの入力が学習に使われない前提が要るなら、それを担保する契約・設定が要る。<b>GDPRの削除要求</b>に応えるには、そのユーザーのデータがログ・ベクトルインデックス・キャッシュのどこに散っているかを把握していなければならない。<br><br>実務的な定石として、機微情報は<b>そもそもコンテキストに入れない</b>(必要な部分だけマスクして渡す)のが最も確実な対処になることが多い。' },
+        { heading: '倫理的な考慮 — バイアス・公平性・透明性',
+          body: '最後に、規制に書かれていなくても設計に織り込むべき観点がある。<br><br><b>バイアスと公平性</b> — 学習データに由来する偏りが、特定の属性に不利な出力として表れうる。採用、与信、医療のように人の機会に影響する用途では、評価セットの段階で属性ごとの結果の差を測る設計にしておく。<br><br><b>透明性</b> — ユーザーがAIとやり取りしていることを認識できるか、判断の根拠を示せるか。RAG構成で出典を提示できるようにしておくのは、精度のためだけでなく説明責任のためでもある。<br><br><b>適切な用途の線引き</b> — そのシステムが扱ってよい範囲と、人に引き継ぐべき範囲を明示する。<b>content boundaries(コンテンツ境界)</b>は機能の制約であると同時に、倫理的な線引きでもある。<br><br>これらは「できれば配慮する」ものではなく、ステークホルダーに設計を説明する際に<b>問われる前提</b>として扱う。次章の内容と直接つながる部分だ。' },
+      ],
+      trapNames: [] },
+
+    { domain: 'stakeholder',
+      diagram: `<svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arr-sh" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/></marker></defs>
+        <text x="14" y="16" font-size="11.5" fill="var(--accent-dark)" font-weight="700">アーキテクトはライフサイクル全体に関与する</text>
+        <rect x="14" y="28" width="122" height="52" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="75" y="50" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Discovery</text>
+        <text x="75" y="66" text-anchor="middle" font-size="9" fill="var(--muted)">課題と制約の把握</text>
+        <path d="M136,54 L154,54" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-sh)"/>
+        <rect x="158" y="28" width="122" height="52" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="219" y="50" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Design</text>
+        <text x="219" y="66" text-anchor="middle" font-size="9" fill="var(--muted)">選択肢と根拠</text>
+        <path d="M280,54 L298,54" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-sh)"/>
+        <rect x="302" y="28" width="122" height="52" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="363" y="50" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Handoff</text>
+        <text x="363" y="66" text-anchor="middle" font-size="9" fill="var(--muted)">実装への引き継ぎ</text>
+        <path d="M424,54 L442,54" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-sh)"/>
+        <rect x="446" y="28" width="122" height="52" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="507" y="50" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Monitoring</text>
+        <text x="507" y="66" text-anchor="middle" font-size="9" fill="var(--muted)">運用と品質監視</text>
+        <path d="M568,54 L586,54" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-sh)"/>
+        <rect x="590" y="28" width="76" height="52" rx="9" fill="var(--card-bg)" stroke="var(--good)"/>
+        <text x="628" y="50" text-anchor="middle" font-size="10.5" fill="var(--good)" font-weight="700">Iteration</text>
+        <text x="628" y="66" text-anchor="middle" font-size="9" fill="var(--muted)">改善</text>
+        <path d="M628,80 L628,96 L75,96 L75,82" stroke="var(--good)" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-sh)"/>
+        <text x="350" y="112" text-anchor="middle" font-size="10" fill="var(--muted)">「設計書を渡して終わり」ではない。監視と改善まで関与範囲に入る</text>
+        <line x1="14" y1="126" x2="666" y2="126" stroke="var(--border)"/>
+        <text x="14" y="146" font-size="11.5" fill="var(--accent-dark)" font-weight="700">相手によって説明の言葉を変える</text>
+        <rect x="14" y="156" width="212" height="76" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="120" y="176" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">経営層</text>
+        <text x="120" y="194" text-anchor="middle" font-size="9.5" fill="var(--muted)">投資対効果・リスク</text>
+        <text x="120" y="209" text-anchor="middle" font-size="9.5" fill="var(--muted)">いつ何が得られるか</text>
+        <text x="120" y="224" text-anchor="middle" font-size="9.5" fill="var(--muted)">判断に必要な材料</text>
+        <rect x="234" y="156" width="212" height="76" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="340" y="176" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">法務・リスク部門</text>
+        <text x="340" y="194" text-anchor="middle" font-size="9.5" fill="var(--muted)">データの流れと保存先</text>
+        <text x="340" y="209" text-anchor="middle" font-size="9.5" fill="var(--muted)">監査証跡・説明可能性</text>
+        <text x="340" y="224" text-anchor="middle" font-size="9.5" fill="var(--muted)">規制への適合根拠</text>
+        <rect x="454" y="156" width="212" height="76" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="560" y="176" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">実装チーム</text>
+        <text x="560" y="194" text-anchor="middle" font-size="9.5" fill="var(--muted)">構成要素と責務</text>
+        <text x="560" y="209" text-anchor="middle" font-size="9.5" fill="var(--muted)">なぜこの選択か</text>
+        <text x="560" y="224" text-anchor="middle" font-size="9.5" fill="var(--muted)">判断に迷う箇所</text>
+        <line x1="14" y1="246" x2="666" y2="246" stroke="var(--border)"/>
+        <text x="14" y="266" font-size="11.5" fill="var(--accent-dark)" font-weight="700">LLMシステムのSLAは「決定論的な保証」では書けない</text>
+        <text x="30" y="286" font-size="10" fill="var(--bad)">誤: 「常に正しい回答を返します」 — 非決定性とハルシネーションがある以上、約束できない</text>
+        <text x="30" y="304" font-size="10" fill="var(--good)">正: 「p95で2秒以内」「評価セット上の正答率95%以上」「不確実な場合は人にエスカレーション」</text>
+      </svg>`,
+      sections: [
+        { heading: '構造化ディスカバリー — 要件は聞くだけでは出てこない',
+          body: 'アーキテクトの仕事は、相手の言った要望をそのまま設計に翻訳することではない。<b>本当の制約を引き出す</b>ところから始まる。<br><br>確認すべき軸はおおむね決まっている。<b>解決したい業務課題は何か</b>(「AIを導入したい」は手段であって課題ではない)。<b>成功をどう測るか</b>。<b>扱うデータは何で、どこにあり、どの区分か</b>。<b>性能の制約</b>(レイテンシ、同時実行数、処理量)。<b>規制と社内統制</b>。<b>予算と期限</b>。<b>既存システムとの接続点</b>。<b>運用は誰が担うか</b>。<br><br>特に見落とされやすいのが<b>インフラ要件と機能要件の切り分け</b>だ。「1万件の同時セッションを処理できること」は機能の話ではなく、容量・構成の話として扱う必要がある。これを機能要件として扱ってしまうと、プロンプトやモデル選定で解決しようとする筋の悪い設計になる。<br><br>また、<b>その課題にLLMが適しているか</b>自体も検討対象だ。決定論的な正確さが絶対に要る計算処理など、従来手法のほうが適している領域はある。' },
+        { heading: 'アーキテクチャ上の決定とトレードオフを伝える',
+          body: '設計判断を説明するとき、技術的な正しさだけを語っても相手には届かない。<b>相手の関心事の言葉に翻訳する</b>必要がある。<br><br><b>経営層</b>に対しては、投資対効果、リスク、いつ何が得られるか。技術の詳細ではなく、判断に必要な材料を出す。<b>法務・リスク部門</b>に対しては、データがどこを通りどこに保存され誰が触れるか、監査証跡が取れるか、規制への適合をどう示すか。<b>実装チーム</b>に対しては、構成要素と責務の分担、なぜこの選択をしたのか、判断に迷いやすい箇所はどこか。<br><br>重要なのは、<b>トレードオフを隠さない</b>ことだ。「この構成なら精度は上がるが、1件あたりのレイテンシが増え、コストも上がる」という形で、何を得て何を諦めたのかを明示する。選ばなかった案と、選ばなかった理由も記録しておくと、後から「なぜこうなっているのか」を蒸し返されずに済む。<br><br>そして、<b>LLMシステムの不確実性を正直に伝える</b>こと。非決定性やハルシネーションの可能性を伏せた説明は、後で信頼を失う形で返ってくる。' },
+        { heading: '期待値の調整とSLA',
+          body: 'LLMを使ったシステムのSLAは、従来システムのようには書けない。<b>「常に正しい回答を返す」は約束できない</b> — 非決定性がある以上、それは守れない約束になる。<br><br>代わりに約束できるのは、<b>測れて守れる形の指標</b>だ。「p95レイテンシ2秒以内」「可用性99.9%」「評価セット上の正答率95%以上を維持」「確信度が低い場合は自動で人にエスカレーションする」。品質については、<b>絶対的な正しさではなく、測定方法と水準</b>を合意する形になる。<br><br>期待値調整は最初の一度で終わらない。運用が始まれば、使われ方も入力の分布も変わる。<b>定期的に実績を共有し、ずれていれば水準や設計を見直す</b>という継続的なループとして設計する。<br><br>フィードバックの受け口も作っておく。ユーザーからの苦情が唯一の品質シグナルになっている状態は、前章の評価設計が機能していないサインでもある。' },
+        { heading: 'ドキュメント化とハンドオフ',
+          body: '設計は、実装するチームが自力で判断を再現できる粒度で残す。<br><br>最低限含めるべきは、<b>全体構成図</b>(どの要素が何を担い、どうつながるか)、<b>主要な設計判断とその理由</b>、<b>制約とその出所</b>(規制由来か、予算由来か、既存システム由来か)、<b>運用上の前提</b>(監視すべき指標、劣化したときの一次対応、ロールバック手順)。<br><br>LLMシステム特有の項目も要る。<b>プロンプトとそのバージョン管理の方針</b>、<b>評価セットの場所と更新ルール</b>、<b>モデルバージョンの固定方針</b>、<b>どの操作に人の承認が要るか</b>。<br><br>ハンドオフは資料を渡す行為ではなく、<b>引き継いだ側が運用できる状態にする</b>ことだ。だからこそ次の項目、ライフサイクルへの継続的な関与が必要になる。' },
+        { heading: 'ライフサイクルを通して関与する',
+          body: 'CCAR-Pが問うアーキテクト像は、<b>discovery → design → handoff → monitoring → iteration</b> の全フェーズに関わる役割だ。設計書を書いて離脱する人ではない。<br><br><b>Discovery</b>では課題と制約を引き出す。<b>Design</b>では選択肢を比較し根拠とともに決める。<b>Handoff</b>では実装チームが自走できる状態を作る。<b>Monitoring</b>では、設計時に決めた指標が実際に満たされているかを追う。<b>Iteration</b>では、実績と新しい要求をもとに設計を更新する。<br><br>このループを回す前提があるから、第1章の<b>feedback loop</b>も、第4章の<b>継続的な評価</b>も設計に必要になる。逆に言えば、「デプロイしたら完成」という前提の選択肢は、このドメインの観点からは不完全な答えになる。<br><br>組織面でも同じで、誰が運用を引き継ぎ、品質劣化に誰が気づき、誰が改善を判断するのか — この体制まで含めて設計の一部として扱う。' },
+      ],
+      trapNames: [] },
+
+    { domain: 'dev-productivity',
+      diagram: `<svg viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg">
+        <text x="14" y="16" font-size="11.5" fill="var(--accent-dark)" font-weight="700">チーム設定は階層で重なる(置き換えではない)</text>
+        <rect x="14" y="26" width="652" height="126" rx="10" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="30" y="46" font-size="10.5" fill="var(--muted)">ユーザーレベル ~/.claude/CLAUDE.md — 個人の好み。チーム共有には使わない</text>
+        <rect x="54" y="54" width="572" height="90" rx="9" fill="var(--pill-bg)" stroke="var(--accent)"/>
+        <text x="70" y="74" font-size="10.5" fill="var(--accent-dark)">プロジェクトレベル(リポジトリにコミット) — チーム全員に同じ設定が届く</text>
+        <text x="70" y="92" font-size="9.5" fill="var(--muted)">CLAUDE.md: 常に読む背景知識 / settings.json: 構造化された設定値</text>
+        <rect x="96" y="100" width="488" height="36" rx="8" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="340" y="123" text-anchor="middle" font-size="10" fill="var(--text)">ディレクトリレベル — そのサブツリーで作業するときだけ追加で重なる</text>
+        <line x1="14" y1="166" x2="666" y2="166" stroke="var(--border)"/>
+        <text x="14" y="186" font-size="11.5" fill="var(--accent-dark)" font-weight="700">どこに何を置くか</text>
+        <rect x="14" y="196" width="158" height="78" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="93" y="215" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">CLAUDE.md</text>
+        <text x="93" y="233" text-anchor="middle" font-size="9.5" fill="var(--muted)">毎回必要な背景</text>
+        <text x="93" y="248" text-anchor="middle" font-size="9.5" fill="var(--muted)">規約・構成・用語</text>
+        <text x="93" y="265" text-anchor="middle" font-size="9" fill="var(--muted)">常時読み込み</text>
+        <rect x="180" y="196" width="158" height="78" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="259" y="215" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">Skill</text>
+        <text x="259" y="233" text-anchor="middle" font-size="9.5" fill="var(--muted)">多段の手順</text>
+        <text x="259" y="248" text-anchor="middle" font-size="9.5" fill="var(--muted)">時々使う専門作業</text>
+        <text x="259" y="265" text-anchor="middle" font-size="9" fill="var(--muted)">必要な時だけ</text>
+        <rect x="346" y="196" width="158" height="78" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="425" y="215" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">スラッシュコマンド</text>
+        <text x="425" y="233" text-anchor="middle" font-size="9.5" fill="var(--muted)">繰り返す定型作業</text>
+        <text x="425" y="248" text-anchor="middle" font-size="9.5" fill="var(--muted)">名前で呼び出す</text>
+        <text x="425" y="265" text-anchor="middle" font-size="9" fill="var(--muted)">再現性のある手順</text>
+        <rect x="512" y="196" width="154" height="78" rx="9" fill="var(--card-bg)" stroke="var(--border)"/>
+        <text x="589" y="215" text-anchor="middle" font-size="10.5" fill="var(--accent-dark)" font-weight="700">MCP / プラグイン</text>
+        <text x="589" y="233" text-anchor="middle" font-size="9.5" fill="var(--muted)">社内システム接続</text>
+        <text x="589" y="248" text-anchor="middle" font-size="9.5" fill="var(--muted)">一度入れて全員へ</text>
+        <text x="589" y="265" text-anchor="middle" font-size="9" fill="var(--muted)">手作業の配布をしない</text>
+      </svg>`,
+      sections: [
+        { heading: 'チーム全体の環境を整える',
+          body: '配点は7%と小さいが、<b>個人の使い方ではなくチームへの展開</b>が問われる点で性質が違う。<br><br>まず<b>CLAUDE.mdの階層</b>を押さえる。ユーザーレベル(個人)・プロジェクトレベル(リポジトリ)・ディレクトリレベル(サブツリー)があり、これらは<b>置き換えではなく重ね合わせ</b>で効く。より具体的なスコープのファイルが、上位のファイルを破棄するわけではない。<br><br>ここでの典型的な失敗が<b>チーム共有すべき規約を個人設定に書いてしまう</b>ことだ。個人の<b>~/.claude/CLAUDE.md</b>に書いても他のメンバーには届かない。全員に効かせたいものは<b>リポジトリにコミットされるプロジェクトレベル</b>に置く。クローンした瞬間から全員に同じ設定が適用される状態が正解で、「各自が手順書を見て手で設定する」は再現性のない運用になる。<br><br>置き場所の使い分けも整理しておく。<b>CLAUDE.md</b>は毎回必要な背景知識(規約、ディレクトリ構成、用語)。<b>settings.json</b>は構造化された設定値。<b>Skill</b>は時々使う多段の手順。<b>スラッシュコマンド</b>は繰り返す定型作業を名前で呼び出せるようにしたもの。<b>MCPサーバーやプラグイン</b>は社内システムへの接続を、一度の導入で全員に配るための仕組みだ。<br><br>何でもCLAUDE.mdに詰め込むと常時読み込みのコストが膨らむので、<b>常に要るのか、時々でいいのか</b>で置き場所を決める。' },
+        { heading: 'AI支援でワークフローを改善する',
+          body: 'ツールを配っただけでは生産性は上がらない。<b>どの作業にどう効かせるか</b>を設計する必要がある。<br><br>効果が出やすいのは、<b>繰り返しが多く、手順が明文化できて、結果を検証できる</b>作業だ。コードレビューの一次チェック、テストの叩き台作成、既存コードの説明、定型的なリファクタリング、ドキュメントの更新といった領域が該当する。これらは<b>スラッシュコマンド</b>として定義しておくと、毎回同じ指示を書き直さずに済み、チーム内で手順が揃う。<br><br>CIやスクリプトからの自動実行には<b>headless mode</b>を使う。対話UIを介さず実行して終了するので、パイプラインに組み込める。<br><br>導入時の実務的な注意として、<b>発見しやすさ</b>がある。せっかく用意したツールやコマンドも、新メンバーが存在を知らなければ使われない。利用可能なものをCLAUDE.mdやオンボーディング資料に記載し、各ツールに<b>説明的な名前と説明文</b>を付けておく。これは第3章のツール設計の話とも重なる。' },
+        { heading: 'デバッグと運用課題を支える',
+          body: '最後の目標は<b>支援する側に回る</b>ことだ。チームが詰まったときに、どこを見ればよいかを示せる状態を作る。<br><br>切り分けの基本は第4章と同じで、<b>どの層の問題か</b>を最初に分ける。アプリケーション・統合コードの問題か、モデルの出力自体の問題か。SDKを使っている場合は、SDKが内部でREST APIを包んでいる構造を理解しておくと、SDK側の例外処理を見るべきか、生のAPIレスポンスを見るべきかを判断できる。<br><br>エラーの性質も見分ける。一時的で再試行すれば通るもの(<b>transient</b>、レート制限など)と、再試行しても直らないもの(<b>non-retryable</b>、リクエスト自体が不正など)では対処が違う。レート制限には<b>指数バックオフ</b>が定石になる。<br><br>多段のエージェントやツール呼び出しでどこでつまずいたか分からないときは、<b>trace analysis</b>で実行経路を追う。サーバー再起動やプラン変更といった表面的な対処では原因にたどり着けない。<br><br>そして運用で得た知見は、<b>CLAUDE.mdや評価セットに還元する</b>。同じ問題を次のメンバーが踏まないようにするところまでが、このドメインの範囲だ。' },
+      ],
+      trapNames: [] },
+  ],
 };
 
 if (typeof module !== 'undefined') { module.exports = { EXAM_META, EXAM_OVERVIEW, PROGRAM_INFO, LESSONS, GLOSSARY, VOCAB, STUDY_PLAN, EXAM_TRAPS, TEXTBOOK, QUICKREF, JA_TRANSLATIONS, QUESTIONS }; }
