@@ -84,9 +84,12 @@ function buildLetterMap(order) {
   });
   return map;
 }
-/* "正解は" is followed by one or more letters (e.g. "正解はB" or "正解はA・C") for multi-select
-   questions; each letter in that run is remapped independently, same as the parenthetical refs. */
-function remapJaLetters(text, map) {
+/* Rewrites choice letters inside an explanation so they match the shuffled order.
+   Two forms are handled: the Japanese "正解は" run, which may carry several letters for
+   multi-select items (e.g. "正解はA・C"), and parenthetical references like "(B)" that
+   appear in both the English and Japanese rationales. */
+function remapLetterRefs(text, map) {
+  if (!text) return text;
   return text
     .replace(/正解は((?:[A-D][・、,]?)+)/g, (m, run) => '正解は' + run.replace(/[A-D]/g, l => map[l] || l))
     .replace(/([\(（])([A-D])([\)）])/g, (m, open, l, close) => open + (map[l] || l) + close);
@@ -104,17 +107,21 @@ function shuffleChoices(q, examId) {
   const answer = isMulti
     ? q.answer.map(a => order.indexOf(a)).sort((a, b) => a - b)
     : order.indexOf(q.answer);
+  const letterMap = buildLetterMap(order);
+  // Explanations cite choices as "(B)". Those letters were written against the authored
+  // order, so they have to be remapped for the shuffled order — in English as well as
+  // Japanese, otherwise the rationale points at the wrong option.
+  const explain = remapLetterRefs(q.explain, letterMap);
   const jaOrig = (examId && JA_TRANSLATIONS[examId] && JA_TRANSLATIONS[examId][q._idx]) || null;
   let ja = null;
   if (jaOrig) {
-    const letterMap = buildLetterMap(order);
     ja = {
       q: jaOrig.q,
       choices: order.map(i => jaOrig.choices[i]),
-      explain: remapJaLetters(jaOrig.explain, letterMap),
+      explain: remapLetterRefs(jaOrig.explain, letterMap),
     };
   }
-  return { ...q, choices, answer, ja };
+  return { ...q, choices, answer, explain, ja };
 }
 
 /* Shared correctness check for both single-select (answer: number) and multi-select

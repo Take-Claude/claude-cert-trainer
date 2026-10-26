@@ -197,3 +197,11 @@ a { color: var(--accent-dark); }
 }
 .diagram-wrap svg { max-width: 100%; height: auto; display: inline-block; }
 .diagram-caption { margin-top: 8px; font-size: 0.78rem; color: var(--muted); }
+
+/* Feedback/iteration arrows in the textbook diagrams march slowly so the loop
+   reads as something that keeps running, not a one-time step. Motion is opt-out
+   via the OS setting — these pages are read for long stretches. */
+@media (prefers-reduced-motion: no-preference) {
+  .diagram-wrap svg .loop { animation: diagram-dash-march 1.8s linear infinite; }
+}
+@keyframes diagram-dash-march { to { stroke-dashoffset: -18; } }
